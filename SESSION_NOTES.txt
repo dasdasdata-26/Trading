@@ -1,0 +1,77 @@
+HPM Proposal Generator Web - Session Notes
+============================================
+Date: March 3, 2026
+
+PROJECT OVERVIEW
+----------------
+- Type: Flask + Vanilla JS web app for generating professional Word (.docx) proposals
+- Location: D:\Dropbox\HPM AI\HPMProposal GeneratorWeb
+- Run: python app.py or run.bat -> opens browser at http://localhost:5000
+- No database -- JSON-based file storage in hpm_proposal/
+- Desktop shortcut created: C:\Users\Owner\Desktop\HPM Proposal Generator.bat
+
+KEY FILES
+---------
+- app.py -- Flask backend (routes, settings API, doc generation, draft management)
+- document_generator.py -- Builds .docx proposals using python-docx
+- hpm_proposal/settings.json -- App settings (company, user, footer, rate schedule)
+- hpm_proposal/templates/ -- Proposal templates (JSON)
+- hpm_proposal/drafts/ -- Saved draft proposals
+- hpm_proposal/output/ -- Generated .docx/.pdf files
+- templates/index.html -- Main proposal form (Jinja2)
+- templates/settings.html -- Settings page (Jinja2 + inline JS)
+- static/js/app.js -- Frontend logic
+- static/css/style.css -- Styling
+
+DEPENDENCIES
+------------
+- Flask, python-docx, beautifulsoup4 (see requirements.txt)
+- Optional: LibreOffice for PDF export
+
+HOSTING ON ANOTHER COMPUTER
+----------------------------
+1. Copy the entire project folder to the target machine
+2. Install Python 3.7+ (check "Add Python to PATH" during install)
+3. Open a terminal and run: pip install -r requirements.txt
+4. Run: python app.py (or double-click run.bat on Windows)
+5. Optional: Install LibreOffice for PDF export
+
+
+SIGNATURE IMAGE FEATURE (added this session)
+=============================================
+
+What Was Done:
+- Added Don's handwritten signature image to generated .docx proposals
+
+Files Changed:
+1. Copied signature image
+   - Source: D:\Dropbox\HPM AI\HPMProposalGenerator\don sig.png
+   - Destination: hpm_proposal/don_sig.png
+
+2. hpm_proposal/settings.json
+   - Added "signature_image": "hpm_proposal/don_sig.png" to the user object
+
+3. app.py
+   - Added GET /hpm_proposal/<filename> route to serve image files for preview
+   - Added POST /api/upload-signature endpoint for uploading new signature images
+
+4. templates/settings.html
+   - Added "Signature Image (PNG)" field with Browse button in User Profile tab
+   - Added showSignaturePreview() and uploadSignatureImage() JS functions
+   - Updated populateSettings() and collectSettings() to handle signature_image
+
+5. document_generator.py - _build_signature()
+   - Rewrote to build left column procedurally instead of from a list
+   - Inserts signature image (1.0" x 0.4") between "Sincerely," and name line
+   - Path resolution: tries BASE_DIR / sig_path then absolute path
+   - Graceful fallback: 3 blank lines if no image configured or file missing
+
+IMPORTANT NOTE:
+- If you save settings from the web UI, make sure the Signature Image path
+  field shows "hpm_proposal/don_sig.png" before saving. If it's blank, the
+  signature_image setting will be cleared.
+- After code changes, always restart the app (Ctrl+C then python app.py).
+
+Verified Working:
+- Tested signature block generation -- image embeds correctly in .docx
+- Image appears between "Sincerely," and "Don Stevenson" in the left column

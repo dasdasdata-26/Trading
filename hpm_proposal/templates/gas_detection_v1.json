@@ -1,0 +1,23 @@
+{
+  "template_id": "gas_detection_v1",
+  "template_name": "Gas Detection / Controls",
+  "section_headings": [
+    "DESIGN, PROJECT MANAGEMENT & CONTRACTOR COORDINATION",
+    "EQUIPMENT",
+    "PLC & HMI PROGRAMMING, START-UP, TESTING & INSPECTIONS",
+    "ELECTRICAL INSTALLATION"
+  ],
+  "default_intro": "Thank you for the opportunity to submit our proposal for assistance with the above referenced project. HPM Systems proposes to provide the equipment and services as outlined herein.",
+  "default_assumptions": [
+    "Client shall be responsible for disabling the active alarms during field services, calibration and functional testing on any part of the gas detection system. HPM Systems shall not be responsible for shutdowns, site interruptions, or other loss of production.",
+    "Fire alarm system changes, wiring, programming or permitting are excluded.",
+    "Current PLC programs and Wonderware programs shall be made available to HPM Systems.",
+    "Current building CAD plans shall be provided to HPM Systems.",
+    "Panel drawings changes or updates are excluded. We do not have CAD files for your panels.",
+    "Permitting and permit fees are excluded. If separate permits are required because the HPM design drawings are not submitted along with the tool installation permit plans, HPM Systems will submit a change order for the permit/plan check fees and permitting labor after the permit has been issued.",
+    "Work shall be performed during regular business hours. Overtime is excluded.",
+    "The proposed fee does not include any services or parts to correct deficiencies that may be found during the project with regards to sensor placement, parts, hardware or wiring; however, HPM Systems can assist in correcting those deficiencies under a separate contract.",
+    "Any additional equipment and services not specifically mentioned in this quote are excluded."
+  ],
+  "default_closing": "We look forward to working with you on this project. Please contact us at (408) 615-6900 or 408-391-2934 or via email at {user_email} for questions."
+}

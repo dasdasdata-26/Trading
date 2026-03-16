@@ -1,0 +1,317 @@
+PRODUCT REQUIREMENTS DOCUMENT
+Proposal Generation Web Application
+HPM Systems, Inc.
+Version 2.0 — REVISED | February 2026 | Locally-Hosted Web Application
+Template Type in v1.0: Gas Detection / Controls (Template 1 of N)
+CONFIDENTIAL — Internal Use Only
+Change Log
+1. Product Overview
+A locally-hosted web application that automates generation of professional client proposals for HPM Systems, Inc. The user fills out a structured form in their web browser, then either downloads the resulting .docx to open in Microsoft Word for review and manual editing, or exports directly to PDF from within the app when no edits are needed. The app runs on the user's own computer — no cloud dependency, no subscription, no registry changes required.
+To start the app, the user runs: python app.py from the app directory. The server starts on localhost:5000 and the app opens automatically in the default browser.
+⚠ MULTI-TEMPLATE ARCHITECTURE — Critical constraint: This PRD covers Template 1 (Gas Detection / Controls). The app must be data-driven so that adding Template 2, 3, etc. in future requires only a new JSON config file — zero code changes. See Section 7.
+Each generated proposal includes:
+HPM Systems logo, top-left, page 1 only
+Plain-text continuation header on pages 2+ (7pt Arial)
+Addressee and project identification block
+Four editable Roman-numeral scope sections with multi-level sub-items (start empty each proposal)
+Assumptions/Exclusions section with lettered items (pre-loaded from template defaults)
+Professional Fee table with dot leaders and yellow-highlighted TOTAL row (whole dollars, no cents)
+Closing paragraph and two-column signature block with toggleable Cc line
+Company Rate Schedule as a separate final page (auto-populated from Settings)
+Centered 7pt footer on every page
+2. Goals & Success Criteria
+3. Users
+Primary User (v1.0): Don Stevenson, Principal Project Manager, HPM Systems, Inc. Needs fast, reliable, correctly formatted proposals with zero manual formatting work.
+Future Users (v2.0+): Additional HPM Systems staff. Single-user Settings model in v1.0; architecture must support multi-user profiles without a full redesign.
+4. Technology Stack (Confirmed — v2.0 Revision)
+5. Functional Requirements
+5.1 Application Shell
+Single-page web application served from Flask on localhost:5000. Scrollable form with collapsible section panels. Minimum usable width: 900px. Navigation/menu bar: New Proposal, Save Draft, Load Draft, Settings, About. Persistent action toolbar: Download .docx, Export to PDF, Save Draft, Load Draft, New Proposal, Settings.
+'New Proposal' shows a confirmation dialog if there is unsaved work.
+5.2 Template Selection
+On 'New Proposal', the user selects a proposal template from a dropdown. In v1.0 only Template 1 exists, but the selector must be present and functional so adding Template 2 later requires no UI changes. The selected template loads its default section headings, default assumptions, default intro, and default closing paragraph.
+5.3 Data Entry Form — Proposal Identification & Addressee
+Required fields (*) are validated before document generation. Inline field-level error messages shown on attempted generation.
+Proposal Identification:
+Date * — date picker, defaults to today, output format: 'Month DD, YYYY' (e.g., February 22, 2026)
+Proposal Number * — free-text field, validated against: six digits, hyphen, literal 'rev', one or more digits (regex: ^\d{6}-rev\d+$). Example: 226001-rev0. User always enters manually. No auto-increment.
+Addressee Block:
+Recipient First Name * — used in salutation 'Dear [First Name],'
+Recipient Last Name * — used in full addressee block
+Company Name * — also appears in continuation header on pages 2+
+Street Address *
+City, State, ZIP *
+Subject Line * — short project description; appears in RE: block and continuation header
+Site / Location * — physical site; appears in RE: block and continuation header
+5.4 Scope of Work — Four Section Panels
+Four Roman-numeral sections, each in its own collapsible panel. On every new proposal, all four sections start with an empty sub-item list — no pre-loaded defaults. The user builds the scope from scratch each time.
+Section headings are editable per proposal (current proposal only; does not update template defaults). A 'Reset to Default' button next to each heading restores the template default.
+Template 1 — Default Section Headings:
+I — DESIGN, PROJECT MANAGEMENT & CONTRACTOR COORDINATION
+II — EQUIPMENT
+III — PLC & HMI PROGRAMMING, START-UP, TESTING & INSPECTIONS
+IV — ELECTRICAL INSTALLATION
+Sub-item management (per section):
+Add new sub-item (button appends to bottom of list)
+Delete sub-item (with confirmation if the item has content)
+Reorder sub-items via drag-and-drop; Up/Down keyboard shortcuts as fallback
+Each sub-item supports nested numbered sub-sub-items (1, 2, 3...) with the same add/delete/reorder controls
+Sub-item body text editor supports: bold, italic, underline, and inline bullet sub-lists
+Output formatting in .docx:
+Section header: 9pt Arial, bold — 'I) [SECTION HEADING]'
+Lettered sub-items: 9pt Arial, indented ~0.5", auto-labeled — 'A) [text]'
+Numbered sub-sub-items: 9pt Arial, indented ~1.0", auto-labeled — '1. [text]'
+5.5 Assumptions & Exclusions
+Fixed section heading: 'ASSUMPTIONS/EXCLUSIONS' (bold, underlined in output). Pre-loaded from the active template's default assumption list stored in Settings. The user may add, delete, or reorder items per proposal via drag-and-drop. Items are auto-labeled A, B, C... in the output.
+Pre-loaded intro line (not editable in the form, fixed): 'The scope of work is based on the following assumptions and/or exclusions:'
+Template 1 default assumptions list: see Section 9.1. Owner to confirm final list before development begins.
+5.6 Professional Fee Summary
+Four currency input fields (one per section) plus a read-only TOTAL FEE field that auto-sums on any change. Whole integers only — no cents. Field accepts plain integer input; formats on blur with $ prefix and comma separators (e.g., user types 12960 → field displays $12,960). TOTAL displays in the same format.
+⚠ Future version: add an 'Import Fees from Excel' button that reads four totals from a user-selected .xlsx and populates the fields. The fee data model must not prevent this addition.
+Output .docx fee table:
+Each row: Section number + heading, dot leaders across full width, right-aligned whole-dollar amount
+TOTAL FEE row: bold, yellow highlight
+Dollar signs appear on every row including individual section rows (e.g., $12,960) and the TOTAL FEE row (e.g., $158,320) — CONFIRMED
+Example row: 'I) DESIGN, PROJECT MANAGEMENT & CONTRACTOR COORDINATION ............... $12,960'
+5.7 Closing Paragraph & Signature Block
+Closing paragraph: pre-loaded from template Settings, editable per proposal in a text area.
+Signature block (two-column layout, matching sample document):
+Left column: 'Sincerely,' / Blank signature line / [User Name from Settings] / [User Title from Settings] / 'HPM Systems, Inc.' / 'CA contractor license # [number from Settings]' / Cc line (see below)
+Right column: 'Client' / 'Authorized Representative' / Blank signature line + 'Date' label / 'P.O.# (if applicable)'
+Cc line behavior:
+Toggle checkbox in the form: 'Include Cc line' (defaults to checked)
+When checked, a text field shows the Cc line content, pre-filled from Settings default (e.g., 'Cc: Bert Buehler, President'), editable per proposal
+When unchecked, the Cc line is omitted from the output entirely
+5.8 Rate Schedule (Separate Final Page)
+Begins with a mandatory page break. Content is auto-populated from the rate schedule stored in Settings. The user does not need to do anything per-proposal — the rate schedule is always appended automatically.
+Annual update workflow: User opens Settings, edits the relevant fields (year, individual rates, special charges) manually, or pastes updated text into the bulk text area. Both editing modes stay in sync. See Section 9.2 for the default content.
+Rate schedule sections in output:
+'HPM SYSTEMS RATE SCHEDULE' — bold heading
+'The following fee schedule applies through December 31, [year]' — year from Settings
+PROFESSIONAL FEES — role names and hourly rates
+SPECIAL CHARGES — bulleted list
+Calibration Gas and Service Van per-use charges
+REIMBURSABLE EXPENSES — mileage and reproduction rates
+5.9 Page Layout, Header & Footer
+All text: Arial. Body: 9pt. Continuation header and footer: 7pt. Section headings in output: 9–10pt bold (developer to match sample visually).
+Page 1 Header:
+HPM Systems logo (PNG, transparent background), top-left corner, approximately 1.5" wide
+No other content in the page 1 header block
+Pages 2+ Continuation Header (7pt Arial, left-aligned, top of page):
+[Client Company Name]
+Subject: [Subject Line]
+Site: [Site]
+Proposal [Proposal Number]
+[Date]
+Page X of Y
+Footer (all pages, 7pt Arial, centered):
+'1292 Kifer Road, Suite 807, Sunnyvale, CA 94086 ♦ Ph: (408) 615-6900'
+Footer text configurable in Settings
+Page Setup:
+US Letter (8.5" × 11"), 1" margins on all sides
+6. Settings Screen
+Accessible from main toolbar. Organized into labeled tabs or collapsible groups. All values persist to hpm_proposal/settings.json (local file in app directory). Single user profile in v1.0.
+7. Multi-Template Architecture (Critical Design Constraint)
+⚠ Claude Code must read and implement this section. The template system is not optional — it is a core architectural requirement.
+HPM Systems uses multiple proposal formats for different service lines. All share the same structure (four Roman-numeral sections, assumptions, fee table, signature block, rate schedule page) but differ in default headings and canned text. Templates are defined in JSON config files, not in Python code.
+Rule: Adding Template 2 in a future version must require only creating a new JSON config file and adding its filename to a template registry. Zero code changes to the application.
+Template JSON schema (minimum required fields):
+template_id — string, unique key (e.g., "gas_detection_v1")
+template_name — display name (e.g., "Gas Detection / Controls")
+section_headings — array of exactly 4 strings (default headings for I–IV)
+default_intro — string (intro paragraph)
+default_assumptions — ordered array of strings (one per lettered item)
+default_closing — string (closing paragraph)
+Note: default scope sub-items are intentionally absent from the schema — all sections start empty on every new proposal.
+Template registry: a simple JSON array file (templates.json) listing the filenames of all available template configs. The app reads this on startup to populate the template selector.
+8. Document Output Specification
+8.1 Page Flow Summary
+8.2 Typography Reference
+⚠ Developer: Use the provided sample PDF (226xxx-Client_Title_rev_.pdf) as the pixel-level visual reference for all spacing, indentation, and heading sizes. When in doubt, match the sample. Dollar signs confirmed on all fee rows.
+9. Default Content — Template 1 (Gas Detection / Controls)
+9.1 Default Assumptions (Template 1) — Owner to Confirm Final List
+Client shall be responsible for disabling the active alarms during field services, calibration and functional testing on any part of the gas detection system. HPM Systems shall not be responsible for shutdowns, site interruptions, or other loss of production.
+Fire alarm system changes, wiring, programming or permitting are excluded.
+Current PLC programs and Wonderware programs shall be made available to HPM Systems.
+Current building CAD plans shall be provided to HPM Systems.
+Panel drawings changes or updates are excluded. We do not have CAD files for your panels.
+Permitting and permit fees are excluded. If separate permits are required because the HPM design drawings are not submitted along with the tool installation permit plans, HPM Systems will submit a change order for the permit/plan check fees and permitting labor after the permit has been issued.
+Work shall be performed during regular business hours. Overtime is excluded.
+The proposed fee does not include any services or parts to correct deficiencies that may be found during the project with regards to sensor placement, parts, hardware or wiring; however, HPM Systems can assist in correcting those deficiencies under a separate contract.
+Any additional equipment and services not specifically mentioned in this quote are excluded.
+9.2 Default Rate Schedule Content (auto-populated from Settings on first run)
+Title: HPM SYSTEMS RATE SCHEDULE
+Subtitle: The following fee schedule applies through December 31, 2026
+PROFESSIONAL FEES:
+Project Assistant: $125
+Office Manager / Administrator: $135
+Automation / Field Technician: $145
+Associate Automation Designer / Integrator: $145
+Automation Designer / Integrator: $165
+Associate Engineer / Programmer: $165
+Automation Engineer / Programmer, Field Service Manager: $185
+Senior Automation Designer / Technician / Integrator: $195
+Senior Automation Engineer / Programmer / Project Manager: $215
+Principal, Project Manager: $225
+Principal, Professional Engineer: $245
+Chemical Specialist: $275
+Subcontractors & Equipment Cost: +15–25%
+SPECIAL CHARGES:
+All after-hours, weekends, and emergency services requested by clients will be provided at 1.5× the standard labor rate. All holiday services will be provided at 2.0× the standard labor rates.
+Expert witness testimony, depositions and similar meetings associated with pending or on-going legal actions shall be provided at 1.5× the standard labor rate.
+All credit card transactions will include 5% of the total charge added to the price.
+A 4-hour minimum labor charge applies to all unscheduled maintenance and emergency services.
+Swing shift work shall be labor rates above +10%. Graveyard shifts shall be rates above +20%.
+Prices on equipment are subject to change due to tariffs.
+OTHER CHARGES:
+Calibration Gas: $25 for each hour of field usage
+Service Van: $25 for each hour of field usage, or a maximum of $100 per day
+REIMBURSABLE EXPENSES (Cost Plus 15–25% Mark-up):
+Including: permit fees, mail & courier services, leased equipment, reproductions, travel and other direct expenses.
+Mileage (other than Service Van): $0.70/Mile
+Black & White Plots: $7 per sheet
+Color Plots: $15 per sheet
+Scan: $7 per sheet
+Color Prints: $1 per sheet
+9.3 Default Intro Paragraph (Template 1)
+'Thank you for the opportunity to submit our proposal for assistance with the above referenced project. HPM Systems proposes to provide the equipment and services as outlined herein.'
+9.4 Default Closing Paragraph (Template 1)
+'We look forward to working with you on this project. Please contact us at (408) 615-6900 or 408-391-2934 or via email at [user email from Settings] for questions.'
+10. Non-Functional Requirements
+11. Out of Scope (v1.0)
+Templates 2, 3, etc. — architecture supports them; content and config deferred to v1.x
+Excel fee import — architecture must allow it; implementation deferred
+Multi-user profiles — architecture must allow future addition; single user in v1.0
+E-signature integration
+CRM / contact database integration
+Cloud storage or collaboration
+Automated email sending
+Auto-parse of uploaded template documents (deferred to v1.1)
+12. Open Items — All Resolved
+All decisions have been confirmed by the owner. There are no outstanding items. The table below documents the final resolution of each question raised during PRD development, including the v2.0 architecture change.
+13. Assets Being Provided to Developer
+14. Suggested Milestones
+15. Glossary
+--- End of Document --- PRD v2.0 — REVISED — ALL DECISIONS LOCKED — READY FOR CLAUDE CODE ---
+=== TABLES ===
+--- TABLE 0 ---
+Version | Summary of Changes
+v1.0 | Initial draft.
+v1.1 | Confirmed tech stack (Python/PyQt6). PDF workflow defined. Proposal number format locked. Sample document analysis added.
+v1.2 | Font: Arial 9pt body / 7pt headers+footers. Whole-dollar fees. PDF export via win32com. Multi-template architecture defined.
+v1.4 — FINAL | All open items resolved. Technology stack, fee formatting, rate schedule, Cc line, and multi-template architecture confirmed and locked.
+v2.0 — REVISED | Architecture revised: Desktop Python/PyQt6 app replaced with locally-hosted web application (Python Flask backend + HTML/JS/CSS frontend). Eliminates Windows long-filename registry change requirement. All functional requirements and document output specifications unchanged. PDF export now via LibreOffice on local server — no Microsoft Office dependency. Settings stored in local JSON files. App launches in default browser via simple startup command.
+--- TABLE 1 ---
+Goal | Measure of Success
+Eliminate manual formatting | Complete proposal produced in under 5 minutes
+Enforce consistent branding | Every output matches the master template visually
+Reduce data-entry errors | All required fields validated before generation
+Flexible output workflow | User can Download .docx to open/edit in Word, or Export to PDF directly
+Extensible to multiple templates | Adding Template 2 requires only a new JSON config, no code changes
+Portable, offline, no subscription | Runs on any OS with Python installed; no internet or cloud dependency
+Easy testing and access | Opens in default web browser; no app installation or long-path registry changes required
+--- TABLE 2 ---
+Component | Decision / Notes
+Web Framework | Python 3.11+ with Flask — serves the web UI and handles API requests for document generation
+Frontend UI | Single-page HTML/CSS/JavaScript application — runs in the user's default web browser (Chrome, Edge, Firefox)
+Document Generation | python-docx — generates the .docx output file on the Flask server
+'Download .docx' button | Flask serves the generated .docx as a file download; user opens it in Word for review/editing
+'Export to PDF' button | LibreOffice command-line (headless mode) — Flask calls LibreOffice to convert .docx to PDF server-side. No Microsoft Office dependency. If LibreOffice is not found, display: 'LibreOffice not found. Please download the .docx and export to PDF from Word manually.'
+Draft persistence | Local .json files saved to a configurable output directory; user selects or configures path in Settings
+Settings persistence | Local JSON config file: hpm_proposal/settings.json (in the app directory or user-specified path)
+Startup | User runs: python app.py — the server starts on localhost:5000 and the app opens automatically in the default browser
+Template storage | hpm_proposal/templates/ directory; templates.json registry + one JSON file per template
+Target OS | Any OS with Python 3.11+ installed (Windows 10/11, macOS, Linux). Primary use: Windows 10/11.
+Installer / Distribution | No installer required. User unzips the app folder, installs Python dependencies via pip install -r requirements.txt, and runs python app.py. A simple run.bat launcher may be provided for Windows convenience.
+Future: Excel fee import | Fee fields must be structured to accept programmatic population from a .xlsx source in a later version — do not implement in v1.0 but do not block it
+--- TABLE 3 ---
+Settings Group | Contents
+Company | Logo (PNG upload), Company Name, Address, Phone, CA Contractor License #
+User Profile | Name, Title, Email, Default Cc Line text
+Footer | Footer text (all pages)
+Template Defaults (per template config) | Section headings I–IV, Default intro paragraph, Default assumptions list (ordered, add/edit/delete/reorder), Default closing paragraph
+Rate Schedule | Year (manual field), Professional Fees table (role + rate rows, add/edit/delete), Special Charges list (add/edit/delete/reorder), Reimbursable Expenses list (add/edit/delete); plus a full-text paste area for bulk annual replacement
+Output / Paths | Output directory for generated .docx and .pdf files; LibreOffice executable path if auto-detection fails
+--- TABLE 4 ---
+Pages | Content
+Page 1 | Logo (top-left) → Date (bold, left-aligned) + Proposal # (right-aligned, same line) → blank line → Addressee block → blank line → RE: block → blank line → Salutation → blank line → Intro paragraph → blank line → 'SCOPE OF WORK' title → Sections I–IV → ASSUMPTIONS/EXCLUSIONS → Fee table → Closing paragraph → Signature block
+Pages 2+ | 7pt continuation header (top-left) → continued body content
+Final page | Page break → HPM Systems Rate Schedule
+All pages | 7pt centered footer: address ♦ phone
+--- TABLE 5 ---
+Document Element | Style
+All body text | Arial 9pt
+Continuation header text (pages 2+) | Arial 7pt, left-aligned
+Footer text | Arial 7pt, centered
+Date on page 1 | Arial 9pt, bold
+'SCOPE OF WORK' title | Arial 9–10pt, bold, underlined — match sample
+Section headers I–IV | Arial 9pt, bold
+Lettered sub-items (A, B, C...) | Arial 9pt, indent ~0.5"
+Numbered sub-sub-items (1, 2, 3...) | Arial 9pt, indent ~1.0"
+'ASSUMPTIONS/EXCLUSIONS' heading | Arial 9–10pt, bold, underlined — match sample
+'PROFESSIONAL FEE' heading | Arial 9–10pt, bold, underlined — match sample
+Fee table rows | Arial 9pt, dot leaders, right-aligned dollar amounts
+TOTAL FEE row | Arial 9pt, bold, yellow shading
+Rate Schedule headings | Arial 9–10pt, bold — match sample
+--- TABLE 6 ---
+Category | Requirement
+Platform | Any OS with Python 3.11+; primary target Windows 10 / Windows 11 (64-bit)
+Performance | .docx generation completes in under 10 seconds
+PDF export dependency | LibreOffice (headless) for server-side PDF conversion. On failure, display a clear error message directing the user to download the .docx and export manually from Word.
+Offline | No internet connection required for any core function. App runs entirely on localhost.
+Setup | pip install -r requirements.txt + python app.py. Optional run.bat for Windows one-click start.
+Settings storage | hpm_proposal/settings.json (local directory, no registry changes required)
+Template storage | hpm_proposal/templates/ directory; templates.json registry + one JSON file per template
+Maintainability | All canned text editable from Settings UI; new templates via JSON config files only
+Extensibility | Fee fields structured for future Excel import hookup without form restructuring
+Accessibility | Full keyboard navigation throughout the web form; standard browser accessibility supported
+--- TABLE 7 ---
+Item | Resolution
+Technology stack | Python 3.11+ / Flask backend + HTML/CSS/JS frontend — CONFIRMED (v2.0 revision)
+PDF export method | LibreOffice headless via command-line on local server. 'Download .docx' and 'Export to PDF' buttons provided. No Microsoft Office required. — CONFIRMED
+Rich text in sub-items | Bold, italic, underline, and inline bullet sub-lists — CONFIRMED
+Proposal number format | XXXXXX-revN (six digits, hyphen, 'rev', integer). Manual entry always. — CONFIRMED
+Scope sub-item defaults | All four sections start empty on every new proposal — CONFIRMED
+Section heading scope | Per-proposal edits only; 'Reset to Default' button available — CONFIRMED
+Sub-item reorder UI | Drag-and-drop; Up/Down keyboard shortcuts as fallback — CONFIRMED
+Logo placement | Page 1 only, top-left corner — CONFIRMED
+Font | Arial 9pt body, 7pt continuation header and footer — CONFIRMED
+Fee amounts | Whole dollars only, no cents — CONFIRMED
+Dollar signs on fee rows | Dollar sign on every row including individual sections (e.g., $12,960) and TOTAL FEE — CONFIRMED
+Fee entry method | Manual entry in v1.0; Excel import deferred to a future version — CONFIRMED
+Rate schedule update method | Auto-populated from Settings defaults; user manually updates Settings fields annually or pastes new schedule text — CONFIRMED
+Rate schedule year | Manual field in Settings; user updates each January — CONFIRMED
+Cc line | Toggleable checkbox per proposal; default text: 'Cc: Bert Buehler, President' stored in Settings — CONFIRMED
+Default assumptions list | Confirmed as listed in Section 9.1; editable in Settings at any time — CONFIRMED
+Closing contact info | Phone numbers and email from Settings auto-inserted into closing paragraph — CONFIRMED
+Multi-template architecture | Data-driven JSON config; adding Template 2 requires no code changes — CONFIRMED
+Single vs. multi-user | Single user profile in v1.0; architecture must support future multi-user addition — CONFIRMED
+Windows long-path issue | Eliminated — web app requires no registry changes or OS modifications — RESOLVED in v2.0
+--- TABLE 8 ---
+Asset | Status
+HPM_logo.png — company logo, transparent background PNG | PROVIDED ✓
+226xxx-Client_Title_rev_.pdf — sample proposal (visual reference) | PROVIDED ✓
+This PRD v2.0 document | PROVIDED ✓
+Final confirmed assumptions list (Section 9.1) | PENDING — owner to confirm
+--- TABLE 9 ---
+Milestone | Deliverable
+M1 — Kickoff | Developer reviews PRD v2.0 and sample PDF. Confirms Flask project structure, template JSON schema, and rich-text widget approach for sub-item editor in browser.
+M2 — UI Prototype | Functional web form in browser (no document generation). Owner approves layout, collapsible panels, drag-and-drop sub-item UX, and Cc line toggle. Confirms app launches via python app.py.
+M3 — Alpha Build | Form → .docx end-to-end with all sections. 'Download .docx' button working. Template JSON loading confirmed.
+M4 — Beta Build | Settings screen complete. Logo, continuation header, 7pt footer, save/load draft, fee table with dot leaders and yellow Total row, signature block with Cc toggle. LibreOffice 'Export to PDF' button working.
+M5 — UAT | Owner tests with 2–3 real proposals. Visual comparison against sample PDF. Bugs fixed. Rate schedule page verified.
+M6 — Release | App folder zipped and handed off with: requirements.txt, run.bat (Windows launcher), and handoff docs covering: how to start the app, how to add Template 2, how to update the rate schedule.
+--- TABLE 10 ---
+Term | Definition
+Proposal | Formal written document describing scope of work and fees for a prospective client
+Template | Named JSON config defining default headings and canned text for one service line
+templates.json | Registry file listing all available template config filenames
+Scope of Work | Body sections I–IV listing specific tasks and deliverables
+Canned Text | Pre-written reusable language stored in Settings or template config
+Continuation Header | 7pt plain-text block on pages 2+ identifying the proposal without the logo
+Dot Leaders | Repeating periods filling space between a fee description and its dollar amount
+Rate Schedule | Billing rates by role/service, auto-appended as the final page of every proposal
+LibreOffice (headless) | Open-source office suite used via command-line to convert .docx to PDF server-side; replaces win32com in v2.0
+Flask | Lightweight Python web framework; serves the proposal generator UI and API on localhost
+Draft (.json) | Saved form state allowing the user to resume editing a proposal later
+localhost:5000 | Default address where the app is served; user accesses via browser at http://localhost:5000
