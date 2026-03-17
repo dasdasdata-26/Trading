@@ -75,3 +75,99 @@ IMPORTANT NOTE:
 Verified Working:
 - Tested signature block generation -- image embeds correctly in .docx
 - Image appears between "Sincerely," and "Don Stevenson" in the left column
+
+
+================================================================================
+SESSION: March 16, 2026
+================================================================================
+
+OVERVIEW
+--------
+Post-build fixes and cleanup session. All four items from fixes_prompt.md were
+implemented and verified. Two additional formatting changes were made. Git
+version control was initialized. PRD updated to v2.1.
+
+WHAT WAS DONE
+-------------
+
+1. FIX: Line Spacing (Fix 1 from fixes_prompt.md)
+   - Problem: generated .docx had 2.0 line spacing
+   - Root cause: pf.line_spacing = 1.0 did not reliably set w:lineRule in OOXML
+   - Fix: rewrote _para_spacing() in document_generator.py to use direct XML
+     manipulation, explicitly setting w:before=0, w:after=0, w:line=240,
+     w:lineRule=auto on every paragraph
+   - Also applied WD_LINE_SPACING.SINGLE to the Normal style so all paragraphs
+     inherit single spacing by default
+   - File changed: document_generator.py
+
+2. FIX: Exact Indentation (Fix 2 from fixes_prompt.md)
+   - Verified indentation values already matched spec exactly:
+     Roman numeral headers: w:left=720, w:hanging=720 (label at 0", text at 0.5")
+     Lettered items (A/B/C): w:left=1440, w:hanging=720 (label at 0.5", text at 1.0")
+     Numbered items (1/2/3): w:left=2160, w:hanging=720 (label at 1.0", text at 1.5")
+   - No code changes needed -- already correct
+
+3. FIX: Section Delete / Restore (Fix 3 from fixes_prompt.md)
+   - Already implemented from prior session -- verified working
+   - Each section panel (I-IV) has an X Delete button in the UI
+   - Deleted sections hidden in UI and excluded from .docx output
+   - Restore bar appears below sections when any are deleted
+   - State persists through Save/Load Draft and New Proposal
+   - Only active (non-deleted) sections appear in fee table and TOTAL
+   - Files: templates/index.html, static/js/app.js, document_generator.py,
+            static/css/style.css
+
+4. FIX: Word Auto-Numbering (Fix 4 from fixes_prompt.md)
+   - Already implemented from prior session -- verified working
+   - OOXML abstractNum/num definitions written so Word continues A/B/C and
+     1)/2)/3) sequences when user adds items after export
+   - Each section gets its own concrete numId (resets to A independently)
+   - File: document_generator.py (_setup_numbering, _alloc_letter_num,
+           _alloc_number_num, _add_list_para)
+
+5. CHANGE: Sub-sub-item format changed from "1." to "1)"
+   - In document_generator.py: lvl_text changed from "%1." to "%1)"
+   - In static/js/app.js: three places where UI label showed "N." changed to "N)"
+   - Files changed: document_generator.py, static/js/app.js
+
+6. CHANGE: Rate schedule special charges now use round bullet points
+   - Previously used style="List Bullet" which could conflict with custom
+     numbering XML
+   - Now uses explicit bullet character (u2022) with hanging indent
+   - File changed: document_generator.py (_build_rate_schedule)
+
+GIT VERSION CONTROL INITIALIZED
+---------------------------------
+- Git repo initialized in project root (2026-03-16)
+- .gitignore created: excludes __pycache__, output/, drafts/, *.tmp.* files
+- Initial commit: dd6a9ec
+  "Initial commit -- Flask proposal generator with all fixes applied"
+- Second commit: b0cc865
+  "Add PRD v2.1 -- revised requirements document"
+- To save a snapshot: git add . && git commit -m "description"
+- To view history: git log --oneline
+- To roll back: git reset --hard <hash>
+
+PRD UPDATED TO v2.1
+--------------------
+- New file: PRD_v2_1_HPM_ProposalGenerator_WebApp.txt
+- Documents all fixes, exact indentation measurements, line spacing spec,
+  delete/restore feature, Word auto-numbering, format changes, git setup
+- Added Section 7.1: complete template authoring guide with JSON schema,
+  step-by-step instructions for adding new templates, and registry format
+- This PRD is the reference document for adding future templates
+
+FILES CHANGED THIS SESSION
+----------------------------
+- document_generator.py  (line spacing, sub-item format, rate schedule bullets)
+- static/js/app.js       (sub-sub-item label format 1. -> 1))
+- .gitignore             (new file)
+- PRD_v2_1_HPM_ProposalGenerator_WebApp.txt  (new file)
+
+NEXT STEPS
+----------
+- Add more proposal templates for other HPM service lines
+- Each new template: create JSON file in hpm_proposal/templates/, add filename
+  to templates.json, restart app -- zero code changes required
+- Reference: PRD v2.1 Section 7 for step-by-step template authoring guide
+- Reference: gas_detection_v1.json as the starting template to copy
