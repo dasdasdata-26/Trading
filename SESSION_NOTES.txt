@@ -171,3 +171,26 @@ NEXT STEPS
   to templates.json, restart app -- zero code changes required
 - Reference: PRD v2.1 Section 7 for step-by-step template authoring guide
 - Reference: gas_detection_v1.json as the starting template to copy
+
+HOW TO ADD A NEW TEMPLATE (when ready)
+----------------------------------------
+All work stays in the same project folder. No application code changes needed.
+
+Step 1. Copy gas_detection_v1.json, rename it (e.g., fire_alarm_v1.json)
+Step 2. Edit the new file -- change only these fields:
+          template_id      -- unique key, e.g., "fire_alarm_v1"
+          template_name    -- dropdown display name, e.g., "Fire Alarm Systems"
+          section_headings -- array of 4 strings (the Roman numeral headings)
+          default_intro    -- opening paragraph for this service line
+          default_assumptions -- list of standard assumptions
+          default_closing  -- closing paragraph
+Step 3. Open templates.json and add the new filename to the array
+Step 4. Restart the app -- new template appears in the dropdown immediately
+Step 5. git add . && git commit -m "Add [template name] template"
+
+TO GET CLAUDE CODE'S HELP ADDING A TEMPLATE:
+  Just open Claude Code in this folder and say something like:
+  "I want to add a template for fire alarm systems.
+   The four section headings are: ..."
+  Claude Code will build the JSON file, register it, and save a git snapshot.
+  No need to touch any files yourself.
