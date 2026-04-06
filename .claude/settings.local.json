@@ -20,7 +20,9 @@
       "Read(//c/Users/Owner/AppData/Local/**)",
       "Bash(powershell.exe -Command \"Get-Command node -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\")",
       "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\")",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)"
     ]
   }
 }
