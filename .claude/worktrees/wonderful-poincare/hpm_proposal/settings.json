@@ -1,0 +1,63 @@
+{
+  "company": {
+    "name": "HPM Systems, Inc.",
+    "address": "1292 Kifer Road, Suite 807, Sunnyvale, CA 94086",
+    "phone": "(408) 615-6900",
+    "contractor_license": "810246"
+  },
+  "user": {
+    "name": "Don Stevenson",
+    "title": "Principal Project Manager",
+    "email": "dstevenson@hpmsystems.com",
+    "default_cc": "Cc: Bert Buehler, President",
+    "signature_image": "hpm_proposal/don_sig.png"
+  },
+  "footer": {
+    "text": "1292 Kifer Road, Suite 807, Sunnyvale, CA 94086  \u2666  Ph: (408) 615-6900"
+  },
+  "output": {
+    "directory": "",
+    "libreoffice_path": ""
+  },
+  "rate_schedule": {
+    "year": "2026",
+    "professional_fees": [
+      {"role": "Project Assistant", "rate": 125},
+      {"role": "Office Manager / Administrator", "rate": 135},
+      {"role": "Automation / Field Technician", "rate": 145},
+      {"role": "Associate Automation Designer / Integrator", "rate": 145},
+      {"role": "Automation Designer / Integrator", "rate": 165},
+      {"role": "Associate Engineer / Programmer", "rate": 165},
+      {"role": "Automation Engineer / Programmer, Field Service Manager", "rate": 185},
+      {"role": "Senior Automation Designer / Technician / Integrator", "rate": 195},
+      {"role": "Senior Automation Engineer / Programmer / Project Manager", "rate": 215},
+      {"role": "Principal, Project Manager", "rate": 225},
+      {"role": "Principal, Professional Engineer", "rate": 245},
+      {"role": "Chemical Specialist", "rate": 275},
+      {"role": "Subcontractors & Equipment Cost", "rate": null, "note": "+15\u201325%"}
+    ],
+    "special_charges": [
+      "All after-hours, weekends, and emergency services requested by clients will be provided at 1.5\u00d7 the standard labor rate. All holiday services will be provided at 2.0\u00d7 the standard labor rates.",
+      "Expert witness testimony, depositions and similar meetings associated with pending or on-going legal actions shall be provided at 1.5\u00d7 the standard labor rate.",
+      "All credit card transactions will include 5% of the total charge added to the price.",
+      "A 4-hour minimum labor charge applies to all unscheduled maintenance and emergency services.",
+      "Swing shift work shall be labor rates above +10%. Graveyard shifts shall be rates above +20%.",
+      "Prices on equipment are subject to change due to tariffs."
+    ],
+    "other_charges": [
+      {"label": "Calibration Gas", "charge": "$25 for each hour of field usage"},
+      {"label": "Service Van", "charge": "$25 for each hour of field usage, or a maximum of $100 per day"}
+    ],
+    "reimbursable": {
+      "intro": "Including: permit fees, mail & courier services, leased equipment, reproductions, travel and other direct expenses.",
+      "markup": "Cost Plus 15\u201325% Mark-up",
+      "items": [
+        {"label": "Mileage (other than Service Van)", "charge": "$0.70/Mile"},
+        {"label": "Black & White Plots", "charge": "$7 per sheet"},
+        {"label": "Color Plots", "charge": "$15 per sheet"},
+        {"label": "Scan", "charge": "$7 per sheet"},
+        {"label": "Color Prints", "charge": "$1 per sheet"}
+      ]
+    }
+  }
+}
