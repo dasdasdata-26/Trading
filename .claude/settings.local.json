@@ -2,7 +2,25 @@
   "permissions": {
     "allow": [
       "Bash(python -c \":*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Read(//c/Users/Owner/tradingview-mcp-jackson/**)",
+      "Bash(npm install:*)",
+      "Bash(cmd.exe /c \"cd C:\\\\Users\\\\Owner\\\\tradingview-mcp-jackson && npm install\")",
+      "Bash(export PATH=\"$PATH:/c/Program Files/nodejs:/c/Users/Owner/AppData/Roaming/npm\")",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(where.exe node:*)",
+      "Bash(where.exe npm:*)",
+      "Read(//c/Users/Owner/AppData/Roaming/**)",
+      "Read(//c//**)",
+      "Bash(where.exe nvm:*)",
+      "Read(//c/Users/Owner/.claude/**)",
+      "Read(//c/Users/Owner/AppData/Local/Programs/nodejs/**)",
+      "Bash(ls \"/c/Users/Owner/AppData/Roaming/nvm/\"*/node.exe)",
+      "Read(//c/Users/Owner/AppData/Local/**)",
+      "Bash(powershell.exe -Command \"Get-Command node -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\")",
+      "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\")",
+      "Bash(git add:*)"
     ]
   }
 }

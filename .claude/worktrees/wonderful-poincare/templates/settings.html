@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings — HPM Proposal Generator</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<nav>
+  <img src="/static/img/HPM logo.png" alt="HPM" class="nav-logo">
+  <span class="nav-title">HPM Proposal Generator — Settings</span>
+  <div class="nav-links">
+    <a href="/">&#8592; Back to Proposal</a>
+  </div>
+</nav>
+
+<div class="settings-wrap">
+  <h1 style="font-size:20px; font-weight:700; color:#1e3a5f; margin-bottom:16px;">Settings</h1>
+
+  <!-- Tabs -->
+  <div class="settings-tabs">
+    <div class="settings-tab active" onclick="showTab('company')">Company</div>
+    <div class="settings-tab" onclick="showTab('user')">User Profile</div>
+    <div class="settings-tab" onclick="showTab('footer')">Footer</div>
+    <div class="settings-tab" onclick="showTab('template-defaults')">Template Defaults</div>
+    <div class="settings-tab" onclick="showTab('rate-schedule')">Rate Schedule</div>
+    <div class="settings-tab" onclick="showTab('output')">Output / Paths</div>
+  </div>
+
+  <div class="settings-content">
+
+    <!-- ===== Company ===== -->
+    <div class="tab-panel active" id="tab-company">
+      <div class="settings-section">
+        <div class="settings-section-title">Company Information</div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Company Name</label>
+            <input type="text" id="s-company-name" placeholder="HPM Systems, Inc.">
+          </div>
+        </div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Address</label>
+            <input type="text" id="s-company-address" placeholder="1292 Kifer Road, Suite 807, Sunnyvale, CA 94086">
+          </div>
+        </div>
+        <div class="settings-form-row">
+          <div class="settings-form-group">
+            <label>Phone</label>
+            <input type="text" id="s-company-phone" placeholder="(408) 615-6900">
+          </div>
+          <div class="settings-form-group">
+            <label>CA Contractor License #</label>
+            <input type="text" id="s-contractor-license" placeholder="810246">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== User Profile ===== -->
+    <div class="tab-panel" id="tab-user">
+      <div class="settings-section">
+        <div class="settings-section-title">User Profile</div>
+        <div class="settings-form-row">
+          <div class="settings-form-group">
+            <label>Full Name</label>
+            <input type="text" id="s-user-name" placeholder="Don Stevenson">
+          </div>
+          <div class="settings-form-group">
+            <label>Title</label>
+            <input type="text" id="s-user-title" placeholder="Principal Project Manager">
+          </div>
+        </div>
+        <div class="settings-form-row">
+          <div class="settings-form-group">
+            <label>Email</label>
+            <input type="email" id="s-user-email" placeholder="dstevenson@hpmsystems.com">
+          </div>
+          <div class="settings-form-group">
+            <label>Default Cc Line</label>
+            <input type="text" id="s-default-cc" placeholder="Cc: Bert Buehler, President">
+          </div>
+        </div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Signature Image (PNG)</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="text" id="s-user-signature-image" placeholder="hpm_proposal/don_sig.png" style="flex:1;" readonly>
+              <label class="btn btn-secondary" style="margin:0; cursor:pointer; white-space:nowrap;">
+                Browse&hellip;
+                <input type="file" id="sig-file-input" accept="image/png" style="display:none;" onchange="uploadSignatureImage(this)">
+              </label>
+            </div>
+            <div id="sig-preview" style="margin-top:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Footer ===== -->
+    <div class="tab-panel" id="tab-footer">
+      <div class="settings-section">
+        <div class="settings-section-title">Footer Text (all pages)</div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Footer Text</label>
+            <input type="text" id="s-footer-text" placeholder="1292 Kifer Road, Suite 807, Sunnyvale, CA 94086  ♦  Ph: (408) 615-6900">
+          </div>
+        </div>
+        <p class="text-muted mt-8">This text is centered at the bottom of every page of the generated proposal.</p>
+      </div>
+    </div>
+
+    <!-- ===== Template Defaults ===== -->
+    <div class="tab-panel" id="tab-template-defaults">
+      <div class="settings-section">
+        <div class="settings-section-title">Template: Gas Detection / Controls</div>
+        <p class="text-muted" style="margin-bottom:14px;">Changes here update the template defaults for all future new proposals. Existing saved drafts are not affected.</p>
+
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Section I — Default Heading</label>
+            <input type="text" id="s-heading-0" placeholder="DESIGN, PROJECT MANAGEMENT & CONTRACTOR COORDINATION">
+          </div>
+        </div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Section II — Default Heading</label>
+            <input type="text" id="s-heading-1" placeholder="EQUIPMENT">
+          </div>
+        </div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Section III — Default Heading</label>
+            <input type="text" id="s-heading-2" placeholder="PLC & HMI PROGRAMMING, START-UP, TESTING & INSPECTIONS">
+          </div>
+        </div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Section IV — Default Heading</label>
+            <input type="text" id="s-heading-3" placeholder="ELECTRICAL INSTALLATION">
+          </div>
+        </div>
+
+        <div class="settings-form-row" style="margin-top:16px;">
+          <div class="settings-form-group full">
+            <label>Default Intro Paragraph</label>
+            <textarea id="s-default-intro" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="settings-form-row" style="margin-top:16px;">
+          <div class="settings-form-group full">
+            <label>Default Closing Paragraph (use {user_email} to auto-insert email)</label>
+            <textarea id="s-default-closing" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <div class="settings-section-title">Default Assumptions List</div>
+          <p class="text-muted" style="margin-bottom:12px;">These are pre-loaded into every new proposal. You can add, edit, delete, or reorder.</p>
+          <div id="s-assumptions-list"></div>
+          <button class="btn-add-row mt-8" onclick="addSettingsAssumption()">+ Add Assumption</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Rate Schedule ===== -->
+    <div class="tab-panel" id="tab-rate-schedule">
+      <div class="settings-section">
+        <div class="settings-section-title">Rate Schedule Year</div>
+        <div class="settings-form-row">
+          <div class="settings-form-group" style="max-width:160px;">
+            <label>Year</label>
+            <input type="text" id="s-rs-year" placeholder="2026">
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Professional Fees</div>
+        <table class="rate-table" id="s-fees-table">
+          <thead>
+            <tr>
+              <th>Role / Title</th>
+              <th style="width:110px;">Hourly Rate ($)</th>
+              <th style="width:110px;">Note (if no rate)</th>
+              <th style="width:40px;"></th>
+            </tr>
+          </thead>
+          <tbody id="s-fees-body"></tbody>
+        </table>
+        <button class="btn-add-row" onclick="addFeeRow()">+ Add Role</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Special Charges</div>
+        <div id="s-special-charges-list"></div>
+        <button class="btn-add-row mt-8" onclick="addSpecialCharge()">+ Add Charge</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Other Charges (Calibration Gas, Service Van)</div>
+        <div id="s-other-charges-list"></div>
+        <button class="btn-add-row mt-8" onclick="addOtherCharge()">+ Add Item</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Reimbursable Expenses</div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Markup Description</label>
+            <input type="text" id="s-reimb-markup" placeholder="Cost Plus 15–25% Mark-up">
+          </div>
+        </div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Intro Text</label>
+            <textarea id="s-reimb-intro" rows="2"></textarea>
+          </div>
+        </div>
+        <div id="s-reimb-items-list"></div>
+        <button class="btn-add-row mt-8" onclick="addReimbItem()">+ Add Item</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Bulk Rate Schedule Replacement</div>
+        <p class="text-muted" style="margin-bottom:10px;">Paste a full updated rate schedule here and click "Parse &amp; Apply" to replace the fields above all at once. Useful for annual updates.</p>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <textarea id="s-rs-bulk" rows="10" placeholder="Paste full rate schedule text here..."></textarea>
+          </div>
+        </div>
+        <button class="btn-cancel" style="margin-top:8px;" onclick="parseBulkRateSchedule()">Parse &amp; Apply</button>
+      </div>
+    </div>
+
+    <!-- ===== Output / Paths ===== -->
+    <div class="tab-panel" id="tab-output">
+      <div class="settings-section">
+        <div class="settings-section-title">Output Directory</div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>Output Directory (where .docx and .pdf files are saved)</label>
+            <input type="text" id="s-output-dir" placeholder="Leave blank to use default: hpm_proposal/output">
+          </div>
+        </div>
+        <p class="text-muted mt-8">Default: <code>hpm_proposal/output</code> inside the app folder.</p>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">LibreOffice Path (for PDF Export)</div>
+        <div class="settings-form-row">
+          <div class="settings-form-group full">
+            <label>LibreOffice Executable Path</label>
+            <input type="text" id="s-libreoffice-path" placeholder="C:\Program Files\LibreOffice\program\soffice.exe">
+          </div>
+        </div>
+        <p class="text-muted mt-8">Leave blank to auto-detect. If "Export to PDF" fails, enter the full path to your LibreOffice <code>soffice.exe</code> here.</p>
+        <p class="text-muted mt-8">If LibreOffice is not installed, download it free at <strong>libreoffice.org</strong> — or use "Download .docx" and export to PDF from Microsoft Word.</p>
+      </div>
+    </div>
+
+  </div><!-- end settings-content -->
+
+  <!-- Save bar -->
+  <div class="settings-save-bar">
+    <button class="btn-save-settings" onclick="saveSettings()">Save Settings</button>
+    <span class="save-status" id="save-status"></span>
+    <a href="/" style="margin-left:auto; font-size:13px; color:#555;">&#8592; Back to Proposal</a>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+"use strict";
+
+let _settings = {};
+
+// ---------------------------------------------------------------------------
+// Tab switching
+// ---------------------------------------------------------------------------
+function showTab(name) {
+  document.querySelectorAll(".settings-tab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+
+  const tabEl = [...document.querySelectorAll(".settings-tab")].find(t =>
+    t.textContent.toLowerCase().replace(/[\s\/]/g, "-").includes(name.replace(/-/g, ""))
+    || t.getAttribute("onclick") && t.getAttribute("onclick").includes(name)
+  );
+  if (tabEl) tabEl.classList.add("active");
+  const panel = document.getElementById(`tab-${name}`);
+  if (panel) panel.classList.add("active");
+}
+// Fix: match by onclick attr
+document.querySelectorAll(".settings-tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".settings-tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Load settings on page open
+// ---------------------------------------------------------------------------
+window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch("/api/settings");
+    _settings = await res.json();
+    populateSettings(_settings);
+  } catch (e) {
+    showToast("Could not load settings: " + e.message, "error");
+  }
+});
+
+function showSignaturePreview(path) {
+  const container = document.getElementById("sig-preview");
+  if (!container) return;
+  if (path) {
+    container.innerHTML = `<img src="/${path}" alt="Signature preview" style="max-width:120px; max-height:48px; border:1px solid #ddd; border-radius:4px; padding:4px; background:#fff;">`;
+  } else {
+    container.innerHTML = '<span style="color:#999; font-size:0.85em;">No signature image configured</span>';
+  }
+}
+
+async function uploadSignatureImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const formData = new FormData();
+  formData.append("file", file);
+  try {
+    const res = await fetch("/api/upload-signature", { method: "POST", body: formData });
+    const json = await res.json();
+    if (json.ok) {
+      document.getElementById("s-user-signature-image").value = json.path;
+      showSignaturePreview(json.path);
+      showToast("Signature image uploaded.", "success");
+    } else {
+      showToast("Upload failed: " + (json.error || "Unknown error"), "error");
+    }
+  } catch (e) {
+    showToast("Upload failed: " + e.message, "error");
+  }
+  input.value = "";
+}
+
+function populateSettings(s) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined && val !== null) el.value = val; };
+
+  // Company
+  set("s-company-name", (s.company || {}).name);
+  set("s-company-address", (s.company || {}).address);
+  set("s-company-phone", (s.company || {}).phone);
+  set("s-contractor-license", (s.company || {}).contractor_license);
+
+  // User
+  set("s-user-name", (s.user || {}).name);
+  set("s-user-title", (s.user || {}).title);
+  set("s-user-email", (s.user || {}).email);
+  set("s-default-cc", (s.user || {}).default_cc);
+  set("s-user-signature-image", (s.user || {}).signature_image);
+  showSignaturePreview((s.user || {}).signature_image);
+
+  // Footer
+  set("s-footer-text", (s.footer || {}).text);
+
+  // Output
+  set("s-output-dir", (s.output || {}).directory);
+  set("s-libreoffice-path", (s.output || {}).libreoffice_path);
+
+  // Rate schedule
+  const rs = s.rate_schedule || {};
+  set("s-rs-year", rs.year);
+
+  // Professional fees table
+  const tbody = document.getElementById("s-fees-body");
+  tbody.innerHTML = "";
+  (rs.professional_fees || []).forEach(f => appendFeeRow(f.role, f.rate, f.note));
+
+  // Special charges
+  const scList = document.getElementById("s-special-charges-list");
+  scList.innerHTML = "";
+  (rs.special_charges || []).forEach(c => appendSpecialCharge(c));
+
+  // Other charges
+  const ocList = document.getElementById("s-other-charges-list");
+  ocList.innerHTML = "";
+  (rs.other_charges || []).forEach(oc => appendOtherCharge(oc.label, oc.charge));
+
+  // Reimbursable
+  const reimb = rs.reimbursable || {};
+  set("s-reimb-markup", reimb.markup);
+  set("s-reimb-intro", reimb.intro);
+  const rList = document.getElementById("s-reimb-items-list");
+  rList.innerHTML = "";
+  (reimb.items || []).forEach(item => appendReimbItem(item.label, item.charge));
+
+  // Template defaults — load from template file via API
+  loadTemplateDefaults();
+}
+
+async function loadTemplateDefaults() {
+  try {
+    const res = await fetch("/api/template/gas_detection_v1");
+    const tpl = await res.json();
+    if (tpl.error) return;
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val; };
+    (tpl.section_headings || []).forEach((h, i) => set(`s-heading-${i}`, h));
+    set("s-default-intro", tpl.default_intro || "");
+    set("s-default-closing", tpl.default_closing || "");
+
+    // Assumptions
+    const list = document.getElementById("s-assumptions-list");
+    list.innerHTML = "";
+    (tpl.default_assumptions || []).forEach(a => appendSettingsAssumption(a));
+  } catch (e) {
+    console.warn("Could not load template defaults", e);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Professional fees table
+// ---------------------------------------------------------------------------
+function appendFeeRow(role, rate, note) {
+  const tbody = document.getElementById("s-fees-body");
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td><input type="text" value="${_esc(role || "")}" placeholder="Role title"></td>
+    <td><input type="text" value="${rate !== null && rate !== undefined ? rate : ""}" placeholder="e.g. 225" style="width:90px;"></td>
+    <td><input type="text" value="${_esc(note || "")}" placeholder="e.g. +15–25%"></td>
+    <td><button class="btn-del-row" onclick="this.closest('tr').remove()">&#10005;</button></td>
+  `;
+  tbody.appendChild(tr);
+}
+function addFeeRow() { appendFeeRow("", null, ""); }
+
+// ---------------------------------------------------------------------------
+// Special charges
+// ---------------------------------------------------------------------------
+function appendSpecialCharge(text) {
+  const list = document.getElementById("s-special-charges-list");
+  const row = document.createElement("div");
+  row.className = "assump-item";
+  row.innerHTML = `
+    <textarea rows="2" placeholder="Charge description...">${_esc(text || "")}</textarea>
+    <button class="btn-del-row" style="margin-top:6px;" onclick="this.closest('.assump-item').remove()">&#10005;</button>
+  `;
+  list.appendChild(row);
+}
+function addSpecialCharge() { appendSpecialCharge(""); }
+
+// ---------------------------------------------------------------------------
+// Other charges
+// ---------------------------------------------------------------------------
+function appendOtherCharge(label, charge) {
+  const list = document.getElementById("s-other-charges-list");
+  const row = document.createElement("div");
+  row.style.cssText = "display:flex;gap:10px;margin-bottom:8px;align-items:center;";
+  row.innerHTML = `
+    <input type="text" value="${_esc(label || "")}" placeholder="Label (e.g. Calibration Gas)" style="flex:1;">
+    <input type="text" value="${_esc(charge || "")}" placeholder="e.g. $25 for each hour of field usage" style="flex:2;">
+    <button class="btn-del-row" onclick="this.closest('div').remove()">&#10005;</button>
+  `;
+  list.appendChild(row);
+}
+function addOtherCharge() { appendOtherCharge("", ""); }
+
+// ---------------------------------------------------------------------------
+// Reimbursable items
+// ---------------------------------------------------------------------------
+function appendReimbItem(label, charge) {
+  const list = document.getElementById("s-reimb-items-list");
+  const row = document.createElement("div");
+  row.style.cssText = "display:flex;gap:10px;margin-bottom:8px;align-items:center;";
+  row.innerHTML = `
+    <input type="text" value="${_esc(label || "")}" placeholder="Item (e.g. Mileage)" style="flex:1;">
+    <input type="text" value="${_esc(charge || "")}" placeholder="e.g. $0.70/Mile" style="flex:1;">
+    <button class="btn-del-row" onclick="this.closest('div').remove()">&#10005;</button>
+  `;
+  list.appendChild(row);
+}
+function addReimbItem() { appendReimbItem("", ""); }
+
+// ---------------------------------------------------------------------------
+// Settings assumptions list
+// ---------------------------------------------------------------------------
+function appendSettingsAssumption(text) {
+  const list = document.getElementById("s-assumptions-list");
+  const idx = list.querySelectorAll(".assump-item").length;
+  const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const row = document.createElement("div");
+  row.className = "assump-item";
+  row.innerHTML = `
+    <div class="assump-move">
+      <button onclick="moveAssumpSetting(this,-1)">&#9650;</button>
+      <button onclick="moveAssumpSetting(this,1)">&#9660;</button>
+    </div>
+    <span style="font-weight:700;color:#1e3a5f;min-width:22px;padding-top:6px;">${LETTERS[idx % 26]})</span>
+    <textarea rows="2">${_esc(text || "")}</textarea>
+    <button class="btn-del-row" style="margin-top:6px;" onclick="this.closest('.assump-item').remove(); reindexAssumpSettings()">&#10005;</button>
+  `;
+  list.appendChild(row);
+}
+function addSettingsAssumption() {
+  appendSettingsAssumption("");
+  reindexAssumpSettings();
+}
+function moveAssumpSetting(btn, dir) {
+  const row = btn.closest(".assump-item");
+  const list = row.parentElement;
+  if (dir === -1) { const prev = row.previousElementSibling; if (prev) list.insertBefore(row, prev); }
+  else { const next = row.nextElementSibling; if (next) list.insertBefore(next, row); }
+  reindexAssumpSettings();
+}
+function reindexAssumpSettings() {
+  const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  document.querySelectorAll("#s-assumptions-list .assump-item").forEach((row, i) => {
+    const lbl = row.querySelectorAll("span")[0];
+    if (lbl) lbl.textContent = `${LETTERS[i % 26]})`;
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Collect and save settings
+// ---------------------------------------------------------------------------
+function collectSettings() {
+  const get = id => { const el = document.getElementById(id); return el ? el.value.trim() : ""; };
+
+  // Professional fees
+  const feesRows = [];
+  document.querySelectorAll("#s-fees-body tr").forEach(tr => {
+    const inputs = tr.querySelectorAll("input");
+    const role = inputs[0] ? inputs[0].value.trim() : "";
+    const rateStr = inputs[1] ? inputs[1].value.trim() : "";
+    const note = inputs[2] ? inputs[2].value.trim() : "";
+    const rate = rateStr ? parseInt(rateStr.replace(/[^\d]/g, ""), 10) : null;
+    if (role) feesRows.push({ role, rate: isNaN(rate) ? null : rate, note });
+  });
+
+  // Special charges
+  const specialCharges = [];
+  document.querySelectorAll("#s-special-charges-list textarea").forEach(ta => {
+    if (ta.value.trim()) specialCharges.push(ta.value.trim());
+  });
+
+  // Other charges
+  const otherCharges = [];
+  document.querySelectorAll("#s-other-charges-list > div").forEach(row => {
+    const inputs = row.querySelectorAll("input");
+    const label = inputs[0] ? inputs[0].value.trim() : "";
+    const charge = inputs[1] ? inputs[1].value.trim() : "";
+    if (label) otherCharges.push({ label, charge });
+  });
+
+  // Reimbursable items
+  const reimbItems = [];
+  document.querySelectorAll("#s-reimb-items-list > div").forEach(row => {
+    const inputs = row.querySelectorAll("input");
+    const label = inputs[0] ? inputs[0].value.trim() : "";
+    const charge = inputs[1] ? inputs[1].value.trim() : "";
+    if (label) reimbItems.push({ label, charge });
+  });
+
+  return {
+    company: {
+      name: get("s-company-name"),
+      address: get("s-company-address"),
+      phone: get("s-company-phone"),
+      contractor_license: get("s-contractor-license"),
+    },
+    user: {
+      name: get("s-user-name"),
+      title: get("s-user-title"),
+      email: get("s-user-email"),
+      default_cc: get("s-default-cc"),
+      signature_image: get("s-user-signature-image"),
+    },
+    footer: { text: get("s-footer-text") },
+    output: {
+      directory: get("s-output-dir"),
+      libreoffice_path: get("s-libreoffice-path"),
+    },
+    rate_schedule: {
+      year: get("s-rs-year"),
+      professional_fees: feesRows,
+      special_charges: specialCharges,
+      other_charges: otherCharges,
+      reimbursable: {
+        markup: get("s-reimb-markup"),
+        intro: get("s-reimb-intro"),
+        items: reimbItems,
+      },
+    },
+  };
+}
+
+async function saveSettings() {
+  const data = collectSettings();
+  // Also save template defaults back to the template JSON via settings endpoint
+  // We store template overrides within settings for simplicity
+  data._template_overrides = {
+    gas_detection_v1: {
+      section_headings: [0,1,2,3].map(i => {
+        const el = document.getElementById(`s-heading-${i}`);
+        return el ? el.value.trim() : "";
+      }),
+      default_intro: (() => { const el = document.getElementById("s-default-intro"); return el ? el.value.trim() : ""; })(),
+      default_closing: (() => { const el = document.getElementById("s-default-closing"); return el ? el.value.trim() : ""; })(),
+      default_assumptions: (() => {
+        const items = [];
+        document.querySelectorAll("#s-assumptions-list textarea").forEach(ta => {
+          if (ta.value.trim()) items.push(ta.value.trim());
+        });
+        return items;
+      })(),
+    }
+  };
+
+  try {
+    const res = await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (json.ok) {
+      document.getElementById("save-status").textContent = "Saved!";
+      setTimeout(() => { document.getElementById("save-status").textContent = ""; }, 3000);
+      showToast("Settings saved successfully.", "success");
+    }
+  } catch (e) {
+    showToast("Save failed: " + e.message, "error");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Bulk rate schedule parser (basic)
+// ---------------------------------------------------------------------------
+function parseBulkRateSchedule() {
+  const text = (document.getElementById("s-rs-bulk") || {}).value || "";
+  if (!text.trim()) { showToast("Paste rate schedule text first.", "warning"); return; }
+
+  // Extract year
+  const yearMatch = text.match(/December\s+31,?\s+(\d{4})/i);
+  if (yearMatch) {
+    const el = document.getElementById("s-rs-year");
+    if (el) el.value = yearMatch[1];
+  }
+
+  showToast("Parsed what was possible. Please review all fields carefully before saving.", "warning");
+}
+
+// ---------------------------------------------------------------------------
+// Toast
+// ---------------------------------------------------------------------------
+function showToast(msg, type = "info") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 4500);
+}
+
+function _esc(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+</script>
+</body>
+</html>

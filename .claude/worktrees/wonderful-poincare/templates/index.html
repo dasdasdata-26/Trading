@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HPM Proposal Generator</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <img src="/static/img/HPM logo.png" alt="HPM" class="nav-logo">
+  <span class="nav-title">HPM Proposal Generator</span>
+  <div class="nav-links">
+    <button onclick="newProposal()">New Proposal</button>
+    <button onclick="showSaveDraftModal()">Save Draft</button>
+    <button onclick="showLoadDraftModal()">Load Draft</button>
+    <a href="/settings-page">Settings</a>
+    <button onclick="showAbout()">About</button>
+  </div>
+</nav>
+
+<!-- ===== TOOLBAR ===== -->
+<div class="toolbar">
+  <button class="btn-primary" onclick="downloadDocx()">&#11015; Download .docx</button>
+  <button class="btn-secondary" onclick="exportPdf()">&#128196; Export to PDF</button>
+  <span class="toolbar-sep"></span>
+  <button class="btn-secondary" onclick="showSaveDraftModal()">Save Draft</button>
+  <button class="btn-secondary" onclick="showLoadDraftModal()">Load Draft</button>
+  <button class="btn-secondary" onclick="newProposal()">New Proposal</button>
+  <span class="toolbar-sep"></span>
+  <a class="btn-secondary" href="/settings-page">Settings</a>
+  <span class="status-msg" id="toolbar-status"></span>
+</div>
+
+<!-- ===== MAIN FORM ===== -->
+<main>
+
+  <!-- Template Selection -->
+  <div class="panel">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <span class="panel-title">Proposal Template</span>
+      <span class="panel-toggle">&#9660;</span>
+    </div>
+    <div class="panel-body">
+      <div class="form-group" style="max-width:380px;">
+        <label>Select Template</label>
+        <select id="template-select" onchange="loadTemplate(this.value, true)"></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proposal Identification -->
+  <div class="panel">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <span class="panel-title">Proposal Identification</span>
+      <span class="panel-toggle">&#9660;</span>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" id="date" required>
+          <span class="field-error" id="date-error"></span>
+        </div>
+        <div class="form-group">
+          <label>Proposal Number *</label>
+          <input type="text" id="proposal-number" placeholder="226001-rev0" spellcheck="false">
+          <span class="field-error" id="proposal-number-error"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Addressee -->
+  <div class="panel">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <span class="panel-title">Addressee</span>
+      <span class="panel-toggle">&#9660;</span>
+    </div>
+    <div class="panel-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Recipient First Name *</label>
+          <input type="text" id="recipient-first" placeholder="First Name">
+          <span class="field-error" id="recipient-first-error"></span>
+        </div>
+        <div class="form-group">
+          <label>Recipient Last Name *</label>
+          <input type="text" id="recipient-last" placeholder="Last Name">
+          <span class="field-error" id="recipient-last-error"></span>
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:12px;">
+        <div class="form-group full">
+          <label>Company Name *</label>
+          <input type="text" id="company-name" placeholder="Acme Corporation">
+          <span class="field-error" id="company-name-error"></span>
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:12px;">
+        <div class="form-group full">
+          <label>Street Address *</label>
+          <input type="text" id="street-address" placeholder="123 Main Street">
+          <span class="field-error" id="street-address-error"></span>
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:12px;">
+        <div class="form-group full">
+          <label>City, State, ZIP *</label>
+          <input type="text" id="city-state-zip" placeholder="San Jose, CA 95101">
+          <span class="field-error" id="city-state-zip-error"></span>
+        </div>
+      </div>
+      <div class="form-row" style="margin-top:12px;">
+        <div class="form-group">
+          <label>Subject Line *</label>
+          <input type="text" id="subject-line" placeholder="Gas Detection System Upgrade">
+          <span class="field-error" id="subject-line-error"></span>
+        </div>
+        <div class="form-group">
+          <label>Site / Location *</label>
+          <input type="text" id="site-location" placeholder="Building 7, Santa Clara">
+          <span class="field-error" id="site-location-error"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scope of Work -->
+  <div class="panel">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <span class="panel-title">Scope of Work — Sections I–IV</span>
+      <span class="panel-toggle">&#9660;</span>
+    </div>
+    <div class="panel-body">
+      <p class="text-muted" style="margin-bottom:14px;">Each section starts empty. Add items using the button below each section. Drag to reorder. Use keyboard arrows to move items up/down.</p>
+
+      <!-- Section 0 -->
+      <div class="section-panel" id="section-panel-0">
+        <div class="section-header" onclick="toggleSection(0)">
+          <span class="section-numeral">I)</span>
+          <input type="text" id="section-heading-0" class="section-heading-input" onclick="event.stopPropagation()" placeholder="Section heading..." oninput="markDirty()">
+          <button class="btn-reset-heading" onclick="event.stopPropagation(); resetSectionHeading(0)">Reset</button>
+          <button class="btn-delete-section" onclick="event.stopPropagation(); deleteSection(0)" title="Remove this section from the document">&#10005; Delete</button>
+          <button class="section-toggle-btn" id="section-toggle-0">&#9660;</button>
+        </div>
+        <div class="section-body" id="section-body-0">
+          <div id="section-0-items" class="items-list"></div>
+          <button class="btn-add-item" onclick="addSubItem(0)">+ Add Item</button>
+        </div>
+      </div>
+
+      <!-- Section 1 -->
+      <div class="section-panel" id="section-panel-1">
+        <div class="section-header" onclick="toggleSection(1)">
+          <span class="section-numeral">II)</span>
+          <input type="text" id="section-heading-1" class="section-heading-input" onclick="event.stopPropagation()" placeholder="Section heading..." oninput="markDirty()">
+          <button class="btn-reset-heading" onclick="event.stopPropagation(); resetSectionHeading(1)">Reset</button>
+          <button class="btn-delete-section" onclick="event.stopPropagation(); deleteSection(1)" title="Remove this section from the document">&#10005; Delete</button>
+          <button class="section-toggle-btn" id="section-toggle-1">&#9660;</button>
+        </div>
+        <div class="section-body" id="section-body-1">
+          <div id="section-1-items" class="items-list"></div>
+          <button class="btn-add-item" onclick="addSubItem(1)">+ Add Item</button>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="section-panel" id="section-panel-2">
+        <div class="section-header" onclick="toggleSection(2)">
+          <span class="section-numeral">III)</span>
+          <input type="text" id="section-heading-2" class="section-heading-input" onclick="event.stopPropagation()" placeholder="Section heading..." oninput="markDirty()">
+          <button class="btn-reset-heading" onclick="event.stopPropagation(); resetSectionHeading(2)">Reset</button>
+          <button class="btn-delete-section" onclick="event.stopPropagation(); deleteSection(2)" title="Remove this section from the document">&#10005; Delete</button>
+          <button class="section-toggle-btn" id="section-toggle-2">&#9660;</button>
+        </div>
+        <div class="section-body" id="section-body-2">
+          <div id="section-2-items" class="items-list"></div>
+          <button class="btn-add-item" onclick="addSubItem(2)">+ Add Item</button>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="section-panel" id="section-panel-3">
+        <div class="section-header" onclick="toggleSection(3)">
+          <span class="section-numeral">IV)</span>
+          <input type="text" id="section-heading-3" class="section-heading-input" onclick="event.stopPropagation()" placeholder="Section heading..." oninput="markDirty()">
+          <button class="btn-reset-heading" onclick="event.stopPropagation(); resetSectionHeading(3)">Reset</button>
+          <button class="btn-delete-section" onclick="event.stopPropagation(); deleteSection(3)" title="Remove this section from the document">&#10005; Delete</button>
+          <button class="section-toggle-btn" id="section-toggle-3">&#9660;</button>
+        </div>
+        <div class="section-body" id="section-body-3">
+          <div id="section-3-items" class="items-list"></div>
+          <button class="btn-add-item" onclick="addSubItem(3)">+ Add Item</button>
+        </div>
+      </div>
+
+      <!-- Restore deleted sections -->
+      <div class="deleted-restore-area" id="deleted-restore-area">
+        <span class="label">Deleted sections:</span>
+        <button class="btn-restore-section" id="restore-btn-0" onclick="restoreSection(0)">Restore I)</button>
+        <button class="btn-restore-section" id="restore-btn-1" onclick="restoreSection(1)">Restore II)</button>
+        <button class="btn-restore-section" id="restore-btn-2" onclick="restoreSection(2)">Restore III)</button>
+        <button class="btn-restore-section" id="restore-btn-3" onclick="restoreSection(3)">Restore IV)</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Assumptions & Exclusions -->
+  <div class="panel">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <span class="panel-title">Assumptions &amp; Exclusions</span>
+      <span class="panel-toggle">&#9660;</span>
+    </div>
+    <div class="panel-body">
+      <p class="text-muted" style="margin-bottom:12px;">Pre-loaded from template defaults. Add, edit, delete, or reorder as needed per proposal.</p>
+      <div id="assumptions-list"></div>
+      <button class="btn-add-item mt-8" onclick="addAssumptionRow()">+ Add Assumption</button>
+    </div>
+  </div>
+
+  <!-- Intro Paragraph -->
+  <div class="panel">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <span class="panel-title">Introductory Paragraph</span>
+      <span class="panel-toggle">&#9660;</span>
+    </div>
+    <div class="panel-body">
+      <div class="form-group full">
+        <label>Opening paragraph (appears after the salutation)</label>
+        <textarea id="intro-paragraph" rows="3" oninput="markDirty()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Professional Fee Summary -->
+  <div class="panel">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <span class="panel-title">Professional Fee Summary</span>
+      <span class="panel-toggle">&#9660;</span>
+    </div>
+    <div class="panel-body">
+      <p class="text-muted" style="margin-bottom:14px;">Enter whole dollar amounts. Fields format automatically. TOTAL updates in real time.</p>
+      <table class="fee-table">
+        <tbody id="fee-table-body">
+          <tr>
+            <td class="fee-numeral">I)</td>
+            <td class="fee-label" id="fee-label-0">Section I</td>
+            <td><input type="text" class="fee-input" id="fee-1" placeholder="$0" inputmode="numeric" oninput="updateTotal()" onblur="fmtFeeBlur(this)"></td>
+          </tr>
+          <tr>
+            <td class="fee-numeral">II)</td>
+            <td class="fee-label" id="fee-label-1">Section II</td>
+            <td><input type="text" class="fee-input" id="fee-2" placeholder="$0" inputmode="numeric" oninput="updateTotal()" onblur="fmtFeeBlur(this)"></td>
+          </tr>
+          <tr>
+            <td class="fee-numeral">III)</td>
+            <td class="fee-label" id="fee-label-2">Section III</td>
+            <td><input type="text" class="fee-input" id="fee-3" placeholder="$0" inputmode="numeric" oninput="updateTotal()" onblur="fmtFeeBlur(this)"></td>
+          </tr>
+          <tr>
+            <td class="fee-numeral">IV)</td>
+            <td class="fee-label" id="fee-label-3">Section IV</td>
+            <td><input type="text" class="fee-input" id="fee-4" placeholder="$0" inputmode="numeric" oninput="updateTotal()" onblur="fmtFeeBlur(this)"></td>
+          </tr>
+          <tr class="fee-total-row">
+            <td></td>
+            <td class="fee-label">TOTAL FEE</td>
+            <td><div class="fee-total-display" id="fee-total">$0</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Closing Paragraph & Signature -->
+  <div class="panel">
+    <div class="panel-header" onclick="togglePanel(this)">
+      <span class="panel-title">Closing Paragraph &amp; Signature</span>
+      <span class="panel-toggle">&#9660;</span>
+    </div>
+    <div class="panel-body">
+      <div class="form-group full">
+        <label>Closing Paragraph</label>
+        <textarea id="closing-paragraph" rows="3" oninput="markDirty()"></textarea>
+      </div>
+
+      <div style="margin-top:18px;">
+        <div class="settings-section-title" style="margin-bottom:10px;">Cc Line</div>
+        <div class="cc-row">
+          <label class="cc-label-wrap">
+            <input type="checkbox" id="include-cc" checked onchange="toggleCcField()">
+            <span>Include Cc line in signature block</span>
+          </label>
+          <div class="cc-text-wrap" id="cc-text-wrap">
+            <input type="text" id="cc-line" placeholder="Cc: Bert Buehler, President" oninput="markDirty()">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px; padding:14px; background:#f7f9fc; border:1px solid #dde1e7; border-radius:6px;">
+        <div class="text-muted" style="font-weight:600; margin-bottom:8px;">Signature Block Preview</div>
+        <div style="font-size:13px; line-height:1.8; color:#333;">
+          <div style="display:flex; gap:80px;">
+            <div>
+              Sincerely,<br><br><br>
+              <span id="preview-name">[Name from Settings]</span><br>
+              <span id="preview-title">[Title from Settings]</span><br>
+              HPM Systems, Inc.<br>
+              CA contractor license # <span id="preview-license">[License from Settings]</span>
+            </div>
+            <div>
+              Client<br>
+              Authorized Representative<br><br><br>
+              Signature &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date<br>
+              <br>
+              P.O.# (if applicable)
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== MODALS ===== -->
+
+<!-- New Proposal confirmation -->
+<div class="modal-overlay" id="modal-new-proposal">
+  <div class="modal">
+    <h2>Start New Proposal?</h2>
+    <p>You have unsaved changes. Starting a new proposal will clear the current form. Save your draft first if you want to keep your work.</p>
+    <div class="modal-btn-row">
+      <button class="btn-cancel" onclick="closeNewProposalModal()">Cancel</button>
+      <button class="btn-cancel" onclick="closeNewProposalModal(); showSaveDraftModal()">Save Draft First</button>
+      <button class="btn-confirm" onclick="confirmNewProposal()">Discard &amp; Start New</button>
+    </div>
+  </div>
+</div>
+
+<!-- Save Draft -->
+<div class="modal-overlay" id="modal-save-draft">
+  <div class="modal">
+    <h2>Save Draft</h2>
+    <div class="form-group">
+      <label>Draft Name</label>
+      <input type="text" id="draft-save-name" placeholder="e.g. 226001-rev0" onkeydown="if(event.key==='Enter') confirmSaveDraft()">
+    </div>
+    <div class="modal-btn-row">
+      <button class="btn-cancel" onclick="closeSaveDraftModal()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmSaveDraft()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Load Draft -->
+<div class="modal-overlay" id="modal-load-draft">
+  <div class="modal">
+    <h2>Load Draft</h2>
+    <div id="draft-list" class="draft-list"></div>
+    <div class="modal-btn-row">
+      <button class="btn-cancel" onclick="closeLoadDraftModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- About -->
+<div class="modal-overlay" id="modal-about">
+  <div class="modal">
+    <h2>HPM Proposal Generator</h2>
+    <p style="margin-bottom:10px;">Version 1.0 &mdash; Locally-hosted web application</p>
+    <p style="margin-bottom:10px; color:#555; font-size:13px;">Generates professional client proposals for HPM Systems, Inc. Runs entirely on your local computer &mdash; no internet connection required.</p>
+    <p style="color:#555; font-size:13px;"><strong>How to start:</strong> Run <code>python app.py</code> or double-click <code>run.bat</code>.</p>
+    <p style="margin-top:10px; color:#555; font-size:13px;"><strong>To add new templates:</strong> Create a JSON config file in <code>hpm_proposal/templates/</code> and add its filename to <code>templates.json</code>.</p>
+    <div class="modal-btn-row">
+      <button class="btn-confirm" onclick="closeAbout()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script src="/static/js/app.js"></script>
+<script>
+  // Load settings to populate signature preview and cc default
+  fetch("/api/settings").then(r => r.json()).then(s => {
+    const u = s.user || {};
+    const c = s.company || {};
+    const el = id => document.getElementById(id);
+    if (el("preview-name")) el("preview-name").textContent = u.name || "[Name]";
+    if (el("preview-title")) el("preview-title").textContent = u.title || "[Title]";
+    if (el("preview-license")) el("preview-license").textContent = c.contractor_license || "[License]";
+    if (el("cc-line") && !el("cc-line").value) el("cc-line").value = u.default_cc || "";
+
+    // Sync fee labels with section headings
+    for (let i = 0; i < 4; i++) {
+      const h = document.getElementById(`section-heading-${i}`);
+      const lbl = document.getElementById(`fee-label-${i}`);
+      if (h && lbl) {
+        const sync = () => { lbl.textContent = h.value || `Section ${["I","II","III","IV"][i]}`; };
+        h.addEventListener("input", sync);
+        sync();
+      }
+    }
+  }).catch(() => {});
+
+  // Also sync fee labels after template loads
+  const origLoad = loadTemplate;
+  // Hook: after template defaults populate headings, sync fee labels
+  document.addEventListener("DOMContentLoaded", () => {
+    for (let i = 0; i < 4; i++) {
+      const h = document.getElementById(`section-heading-${i}`);
+      const lbl = document.getElementById(`fee-label-${i}`);
+      if (h && lbl) {
+        const sync = () => { lbl.textContent = h.value || `Section ${["I","II","III","IV"][i]}`; };
+        h.addEventListener("input", sync);
+        // Initial sync via MutationObserver for when value is set programmatically
+        new MutationObserver(sync).observe(h, { attributes: true, attributeFilter: ["value"] });
+        // Also poll once after short delay for initial load
+        setTimeout(sync, 600);
+      }
+    }
+  });
+</script>
+</body>
+</html>
