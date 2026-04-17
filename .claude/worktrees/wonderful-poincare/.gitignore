@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Generated output
+hpm_proposal/output/
+
+# Drafts (optional — remove this line if you want drafts version-controlled)
+hpm_proposal/drafts/
+
+# Temp/backup files
+*.tmp.*
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
